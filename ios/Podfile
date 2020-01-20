@@ -38,6 +38,12 @@ target 'bioApp' do
 
   pod 'RNFS', :path => '../node_modules/react-native-fs'
 
+  pod 'RNImageCropPicker', :path => '../node_modules/react-native-image-crop-picker'
+
+  pod 'TOCropViewController', :path => '../node_modules/react-native-image-cropper-thanhtq'
+
+  pod 'react-native-image-editor', :path => '../node_modules/@react-native-community/image-editor'
+
   target 'bioAppTests' do
     inherit! :search_paths
     # Pods for testing

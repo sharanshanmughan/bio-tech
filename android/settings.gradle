@@ -1,4 +1,8 @@
 rootProject.name = 'bioApp'
+include ':@react-native-community_image-editor'
+project(':@react-native-community_image-editor').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-community/image-editor/android')
+include ':react-native-image-crop-picker'
+project(':react-native-image-crop-picker').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-image-crop-picker/android')
 include ':react-native-fs'
 project(':react-native-fs').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fs/android')
 include ':react-native-keep-awake'

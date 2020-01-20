@@ -21,7 +21,8 @@ class CameraPhase extends Component {
             isTorchOn: false,
             isFlashOn:false,
             show:false,
-            cameraView:true
+            cameraView:true,
+            url:''
           };
     }
     requestExternalStoragePermission () {
@@ -40,20 +41,21 @@ class CameraPhase extends Component {
         }
       };
     _handlePress() {
-        const { isFlashOn } = this.state;
-        //Torch.switchState(!isTorchOn);
-        this.setState({ isFlashOn: !isFlashOn });
+        // const { isFlashOn } = this.state;
+        // //Torch.switchState(!isTorchOn);
+        // this.setState({ isFlashOn: !isFlashOn });
+        
         
       }
     takePicture = async()=>{
-        var hours = new Date().getHours(); //Current Hours
-        var min = new Date().getMinutes(); //Current Minutes
-        var sec = new Date().getSeconds(); //Current Seconds
-        var currentTime=hours+'_'+min+'_'+sec;
+        // var hours = new Date().getHours(); //Current Hours
+        // var min = new Date().getMinutes(); //Current Minutes
+        // var sec = new Date().getSeconds(); //Current Seconds
+        // var currentTime=hours+'_'+min+'_'+sec;
         const options = {
             base64: true,
-            width:450,
-            height:800
+            width:225,
+            height:400
         };
         this.requestExternalStoragePermission();
         var filepath=RNFS.ExternalStorageDirectoryPath + '/biotestsample/';
@@ -62,41 +64,46 @@ class CameraPhase extends Component {
             //alert('created')
        })
         const data = await this.camera.takePictureAsync(options); 
-        //alert(data.uri)
-        this.setState({cameraView:false})
-        this.setState({show:true})
-        var bodyFormData = new FormData();
-        bodyFormData.append('image',
-        {
-          uri:data.uri,
-          name:'userProfile.jpg',
-          type:'image/jpg'
-        });
+        let url =data.uri
+        //this.setState({url: url})
+        this.props.navigation.navigate('SelectImage',{uri:url})
+        alert(data.uri)
+        //this.setState({cameraView:false})
+       // this.setState({show:true})
+      //   var bodyFormData = new FormData();
+      //   bodyFormData.append('image',
+      //   {
+      //     uri:data.uri,
+      //     name:'userProfile.jpg',
+      //     type:'image/jpg'
+      //   });
       
-      fetch(
-        'http://52.205.117.252/predict', 
-         {
-            method:'POST',
-            headers: {'Accept-Encoding':'gzip;q=1.0, compress;q=0.5'},
-            body:bodyFormData}
-      ).then((res) => res.json())
-      .then(resjson=>{
-        var param=resjson["prediction"]
-          //alert(param)
-          RNFS.moveFile(data.uri,filepath+param+'_'+currentTime+'.jpg')
-          this.setState({show: false})
-          this.setState({cameraView:true})
-          this.props.navigation.navigate('AnalysisPhase',{reading:param});
-      }).catch(err=>{
-        this.setState({show: false})
-        this.setState({cameraView:true})
-        alert('analysis fails')
-      })
+      // fetch(
+      //   'https://bioapplication.herokuapp.com/create/', 
+      //    {
+      //       method:'POST',
+      //       headers: {'Accept-Encoding':'gzip;q=1.0, compress;q=0.5'},
+      //       body:bodyFormData}
+      // ).then((res) => res.json())
+      // .then(resjson=>{
+      //   var param=resjson["value"]
+      //   var ids= resjson["id"]
+      //     //alert(id)
+      //     RNFS.moveFile(data.uri,filepath+param+'_'+currentTime+'.jpg')
+      //     this.setState({url:filepath+param+'_'+currentTime+'.jpg'})
+      //     this.setState({show: false})
+      //     this.setState({cameraView:true})
+      //     //this.props.navigation.navigate('AnalysisPhase',{reading:param,ids:ids});
+      // }).catch(err=>{
+      //   this.setState({show: false})
+      //   this.setState({cameraView:true})
+      //   alert('analysis fails')
+      // })
     }
     render() {
         return (
                 <View style={styles.container}>
-                    {this.state.show ? <UIActivityIndicator style={{display:'flex'}}  size={50} color='#000'/>:null}
+                    
                     {this.state.cameraView ?<RNCamera
                                 flashMode={this.state.isFlashOn ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off}
                                 ref={ref => {

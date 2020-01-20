@@ -3,6 +3,7 @@ import {StyleSheet} from 'react-native';
 import {createStackNavigator} from 'react-navigation-stack';
 import CameraPhase from './screens/CameraPhase';
 import AnalysisPhase from './screens/AnalysisPhase';
+import SelectImage from './screens/SelectImage';
 const MainNavigator = createStackNavigator({
   CameraPhase: {screen:CameraPhase,
     navigationOptions:{
@@ -12,7 +13,12 @@ const MainNavigator = createStackNavigator({
     navigationOptions:{
       header:null
   }
-  },
+},
+  SelectImage:{screen:SelectImage,
+    navigationOptions:{
+      header:null
+  }
+  }
  
   
 });

@@ -1,6 +1,18 @@
 import React, {Component} from 'react';
 import {View,StyleSheet,Text,Image,TouchableOpacity,TextInput} from 'react-native';
 import Dialog from "react-native-dialog";
+import {BallIndicator,
+    WaveIndicator,
+    UIActivityIndicator,
+    SkypeIndicator,
+    PulseIndicator,
+    BarIndicator,
+    MaterialIndicator,
+    DotIndicator,
+    PacmanIndicator} from 'react-native-indicators'
+
+
+//import ImageCropper from 'react-native-advance-image-cropper';
 
 class AnalysisPhase extends Component {
     constructor(props) {
@@ -14,6 +26,8 @@ class AnalysisPhase extends Component {
         var min = new Date().getMinutes(); //Current Minutes
         var sec = new Date().getSeconds(); //Current Seconds
         var value = parseInt(this.props.navigation.state.params.reading, 10)
+        this.id = this.props.navigation.state.params.ids;
+        //alert(this.id)
         var reading=value*18
         this.state={
             //Setting the value of the date time
@@ -21,21 +35,50 @@ class AnalysisPhase extends Component {
             reading:reading,
             date: date + '/' + month + '/' + year , 
             time:hours + ':' + min,
-            dialogShow:false
+            dialogShow:false,
+            newValue:'',
+            show:false,
+            containerView:true
           };
     }
     closeDialogBox=()=>{
         this.setState({dialogShow:false});
+       
     }
     openDialogBox=()=>{
-        
+        //alert(this.id)
         this.setState({dialogShow:true});
+        this.setState({containerView: true})
     }
     backToCamera=()=>{
         this.props.navigation.navigate('CameraPhase')
     }
     saveValue = ()=>{
-        this.setState({dialogShow:false});
+       
+        this.setState({show: true})
+        this.setState({containerView: false})
+        const { newValue }  = this.state ;
+        var bodyFormData = new FormData();
+        bodyFormData.append('value',newValue
+        );
+        fetch(
+            'https://bioapplication.herokuapp.com/'+this.id+'/change/', 
+             {
+                method:'POST',
+                headers: {'Accept-Encoding':'gzip;q=1.0, compress;q=0.5'},
+                body:bodyFormData}
+          ).then((res) => res.json())
+          .then(resjson=>{
+            var param=resjson["value"]
+            var ids= resjson["id"]
+              //alert(param)
+              this.setState({dialogShow:false});
+              
+          }).catch(err=>{
+            this.setState({show: false})
+            this.setState({cameraView:true})
+            alert('analysis fails')
+          })
     }
     render() {
         return (
@@ -84,11 +127,14 @@ class AnalysisPhase extends Component {
                             </TouchableOpacity>
                         </View>
                         <Dialog.Container visible={this.state.dialogShow} >
-                            <View style={{}}>
+                        {this.state.show ? <UIActivityIndicator style={{display:'flex'}}  size={50} color='#000'/>:null}
+                            {this.state.containerView ? <View style={{}}>
                                 <Text style={{alignSelf: 'center', fontSize:20}}>New Value</Text>
                                 {/* <Dialog.Title>New Value:</Dialog.Title> */}
                                 
-                                <TextInput keyboardType='numeric' style={{
+                                <TextInput keyboardType='numeric' 
+                                            onChangeText={newValue=>this.setState({newValue})}
+                                            style={{
                                                 borderColor: 'black',
                                                 top:10,
                                                 fontSize: 18,
@@ -102,11 +148,13 @@ class AnalysisPhase extends Component {
                                     <TouchableOpacity style={{left:120}} onPress={this.closeDialogBox}>
                                     <Image source={require('../images/cross.png')} style={{width:40,height:40}}></Image>
                                 </TouchableOpacity>
-                        </View>     
+                        </View>    
                                 {/* <Dialog.Button label="Cancel" />
                                 <Dialog.Button label="Delete" /> */}
-                                </View>
+                                </View>:null} 
                         </Dialog.Container>
+
+                        
                 </View>
         )
     }
@@ -114,10 +162,8 @@ class AnalysisPhase extends Component {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      
-     
     },
-    
+
 });
 export default AnalysisPhase;
 
