@@ -41,9 +41,9 @@ class CameraPhase extends Component {
         }
       };
     _handlePress() {
-        // const { isFlashOn } = this.state;
+         const { isFlashOn } = this.state;
         // //Torch.switchState(!isTorchOn);
-        // this.setState({ isFlashOn: !isFlashOn });
+         this.setState({ isFlashOn: !isFlashOn });
         
         
       }
@@ -67,7 +67,7 @@ class CameraPhase extends Component {
         let url =data.uri
         //this.setState({url: url})
         this.props.navigation.navigate('SelectImage',{uri:url})
-        alert(data.uri)
+        //alert(data.uri)
         //this.setState({cameraView:false})
        // this.setState({show:true})
       //   var bodyFormData = new FormData();

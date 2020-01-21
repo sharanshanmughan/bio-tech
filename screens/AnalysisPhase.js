@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View,StyleSheet,Text,Image,TouchableOpacity,TextInput} from 'react-native';
+import {View,StyleSheet,Text,Image,TouchableOpacity,BackHandler,TextInput} from 'react-native';
 import Dialog from "react-native-dialog";
 import {BallIndicator,
     WaveIndicator,
@@ -41,6 +41,18 @@ class AnalysisPhase extends Component {
             containerView:true
           };
     }
+    componentDidMount() {
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+      }
+    
+      componentWillUnmount() {
+        this.backHandler.remove()
+      }
+    
+      handleBackPress = async() => {
+          //alert('back')
+        this.props.navigation.navigate('CameraPhase')
+      }
     closeDialogBox=()=>{
         this.setState({dialogShow:false});
        

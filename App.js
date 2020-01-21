@@ -9,16 +9,16 @@ const MainNavigator = createStackNavigator({
     navigationOptions:{
       header:null}
   },
-  AnalysisPhase:{screen:AnalysisPhase,
-    navigationOptions:{
-      header:null
-  }
-},
   SelectImage:{screen:SelectImage,
     navigationOptions:{
       header:null
   }
+  },
+  AnalysisPhase:{screen:AnalysisPhase,
+    navigationOptions:{
+      header:null
   }
+}
  
   
 });
