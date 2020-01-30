@@ -15,7 +15,6 @@ import {BallIndicator,
 class SelectImage extends Component {
     constructor(props) {
         super(props);
-        
        //KeepAwake.activate();
         this.state = {
             url:this.props.navigation.state.params.uri,
@@ -24,9 +23,8 @@ class SelectImage extends Component {
           };
           //alert(this.state.url)
     }
-    edit=()=>{ 
-        
-        
+    edit=()=>{
+
         //alert(this.state.url)
         ImagePicker.openCropper({
             path: this.state.url,
@@ -41,13 +39,11 @@ class SelectImage extends Component {
 
             this.setState({show: true})
             this.setState({cameraView:false})
-            //alert(JSON.stringify(image['path']));
             var filepath=RNFS.ExternalStorageDirectoryPath + '/biotestsample/';
             var hours = new Date().getHours(); //Current Hours
             var min = new Date().getMinutes(); //Current Minutes
             var sec = new Date().getSeconds(); //Current Seconds
             var currentTime=hours+'_'+min+'_'+sec;
-            //RNFS.moveFile(image['path'],filepath+'image.jpg')
             var bodyFormData = new FormData();
                     bodyFormData.append('image',
                     {
@@ -55,9 +51,9 @@ class SelectImage extends Component {
                     name:'userProfile.jpg',
                     type:'image/jpg'
                     });
-                
+
                 fetch(
-                    'https://bioapplication.herokuapp.com/create/', 
+                    'http://139.59.73.106/create/',
                     {
                         method:'POST',
                         headers: {'Accept-Encoding':'gzip;q=1.0, compress;q=0.5'},
@@ -71,32 +67,33 @@ class SelectImage extends Component {
                         //alert('copy file')
                         this.setState({url:filepath+param+'_'+currentTime+'.jpg'})
                     })
-                   
+
                     this.setState({show: false})
                     this.setState({cameraView:true})
                     this.props.navigation.navigate('AnalysisPhase',{reading:param,ids:ids});
                 }).catch(err=>{
                     this.setState({show: false})
                     this.setState({cameraView:true})
-                    alert('analysis fails')
+                    alert('analysis fails:'+err)
+                    
                 })
     }
     render() {
         return (
             <View style={styles.container}>
-            
+
             <View style={{backgroundColor:'black',height:'10%',width:'100%',
             justifyContent:'center',alignItems:'center'
             }}>
                     <Text style={{color: 'white',fontWeight:'bold'}}>Image Editor</Text>
             </View>
             {this.state.show ? <UIActivityIndicator style={{display:'flex'}}  size={50} color='#000'/>:null}
-             
+
 
              {this.state.cameraView ?
                     <View style={{height:'50%', width:'60%',top:'5%',
                     borderColor:'black',borderWidth:2,alignSelf:'center',borderRadius:15}}>
-                        <Image source={{uri: this.state.url}} style={{resizeMode: 'cover',flex: 1,borderRadius:10-}} />
+                        <Image source={{uri: this.state.url}} style={{resizeMode: 'cover',flex: 1,borderRadius:10}} />
                     </View>
             :null}
                     <View style={{flexDirection: 'row',top:'25%',left:'20%'}}>
@@ -111,10 +108,9 @@ class SelectImage extends Component {
         )}
 }
 const styles = StyleSheet.create({
-    
+
     container: {
-        flex: 1,
-        
+        flex: 1
     },
 
 });

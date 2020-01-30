@@ -55,15 +55,32 @@ class AnalysisPhase extends Component {
       }
     closeDialogBox=()=>{
         this.setState({dialogShow:false});
-       
+        
     }
     openDialogBox=()=>{
         //alert(this.id)
+        this.setState({show: false})
         this.setState({dialogShow:true});
         this.setState({containerView: true})
     }
     backToCamera=()=>{
         this.props.navigation.navigate('CameraPhase')
+        fetch(
+            'http://139.59.73.106/'+this.id+'/change/', 
+             {
+                method:'POST',
+                headers: {'Accept-Encoding':'gzip;q=1.0, compress;q=0.5'},
+                }
+          ).then((res) => res.json())
+          .then(resjson=>{
+            //alert(JSON.stringify(resjson))
+              this.setState({dialogShow:false});
+              
+          }).catch(err=>{
+            this.setState({show: false})
+            this.setState({cameraView:true})
+            alert('analysis fails')
+          })
     }
     saveValue = ()=>{
        
@@ -74,7 +91,7 @@ class AnalysisPhase extends Component {
         bodyFormData.append('value',newValue
         );
         fetch(
-            'https://bioapplication.herokuapp.com/'+this.id+'/change/', 
+            'http://139.59.73.106/'+this.id+'/change/', 
              {
                 method:'POST',
                 headers: {'Accept-Encoding':'gzip;q=1.0, compress;q=0.5'},
@@ -85,7 +102,7 @@ class AnalysisPhase extends Component {
             var ids= resjson["id"]
               //alert(param)
               this.setState({dialogShow:false});
-              
+              this.props.navigation.navigate('CameraPhase')
           }).catch(err=>{
             this.setState({show: false})
             this.setState({cameraView:true})
